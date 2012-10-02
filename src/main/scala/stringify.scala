@@ -1,6 +1,6 @@
 package hostclub
 
-object Serialize {
+object Stringify {
   val Newline = "\n"
 
   def apply(chunks: Seq[Chunk]) = {
