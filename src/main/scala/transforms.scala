@@ -51,8 +51,10 @@ object Transforms {
   /** unmap host */
   def unmap(host: String, section: String = "default"): Op = _.map {
     case s@Section(sec, mappings) if (sec == section) =>
-      s.copy(mappings = mappings map {
+      s.copy(mappings = (mappings map {
         case (k, v) => (k, v.filterNot(_ == host))
+      }).filter {
+        case (k, v) => !v.isEmpty
       })
     case c => c
   }
