@@ -18,7 +18,7 @@ install with conscript ( you will need to build and publish the project locally 
 
       map, unmap, clear, aliases, alias, host, ip, ls, help, swap, completion 
 
-You may substitute an alias any where an ip is expected.
+You may substitute an alias anywhere an ip is expected.
 
 ### map 
 
