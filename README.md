@@ -12,12 +12,13 @@ install with conscript ( you will need to build and publish the project locally 
 
 ## usage
 
-
      $ hc <command> <options>
      
       Commands:
 
       map, unmap, clear, aliases, alias, host, ip, ls, help, swap, completion 
+
+You may substitute an alias any where an ip is expected.
 
 ### map 
 
