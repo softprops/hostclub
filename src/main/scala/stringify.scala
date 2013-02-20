@@ -27,7 +27,7 @@ object Stringify {
       }
     }
     
-    def mapping(m: (String, Seq[String])) = m match {
+    def mapping(m: (String, Set[String])) = m match {
       case (ip, hosts) =>
         b.append(ip).
           append("\t").
@@ -38,12 +38,13 @@ object Stringify {
     chunks.foreach {
       case Text(txt) =>
         b.append(txt)
+        if (!txt.endsWith("\n")) b.append("\n")
       case Section(name, mappings) =>
         open(name)
         mappings.foreach(mapping)
         close(name)
       case Invalid(inv) =>
-        b.append(inv) // fixme: what shall we do here?      
+        println("not serializing invalid source %s" format inv)
     }
 
     b.toString

@@ -11,5 +11,5 @@ case class Open(name: String) extends SectionDelimiter
 case class Close(name: String) extends SectionDelimiter
 
 case class Section(name: String,
-                   mappings: Iterable[(String, List[String])] = Nil)
+                   mappings: Iterable[(String, Set[String])] = Nil)
      extends Chunk

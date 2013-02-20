@@ -27,13 +27,13 @@ object Parse extends RegexParsers {
       t => Text(t.mkString(""))
     })
 
-  def mapping: Parser[(String, List[String])] =
+  def mapping: Parser[(String, Set[String])] =
     ip ~ (rep1(space) ~> rep1sep(host, space)) ^^ {
-      case ip ~ hosts => (ip -> hosts)
+      case ip ~ hosts => (ip -> hosts.toSet)
     }
 
-  def mappings: Parser[List[(String, List[String])]] =
-    rep1(mapping <~ opt(anythingBut(mapping)))
+  def mappings: Parser[List[(String, Set[String])]] =
+    rep(mapping <~ opt(anythingBut(mapping)))
 
   def section: Parser[Chunk] =
     (sectionOpen ~ anythingBut(sectionClose)) <~ sectionClose ^^ {
