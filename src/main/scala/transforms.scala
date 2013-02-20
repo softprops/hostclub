@@ -37,13 +37,15 @@ object Transforms {
   }
 
   /** map a host to given ip */
-  def map(host: String, ip: String, section: String = "default"): Op = _.map {
-    case s@Section(sec, mappings) if (sec == section) =>
-      val maps = Map(mappings.toSeq:_*)
-      val updated  = if (maps.contains(ip)) maps + (ip -> (maps(ip) + host))
+  def map(host: String, ip: String, section: String = "default"): Op = { cs =>
+    unmap(host)(cs).map {
+      case s@Section(sec, mappings) if (sec == section) =>
+        val maps = Map(mappings.toSeq:_*)
+        val updated  = if (maps.contains(ip)) maps + (ip -> (maps(ip) + host))
                      else maps + (ip -> Set(host))
-      s.copy(mappings = updated)
-    case c => c
+        s.copy(mappings = updated)
+      case c => c
+    }
   }
 
   /** unmap host */
