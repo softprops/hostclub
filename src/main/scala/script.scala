@@ -4,14 +4,26 @@ import xsbti.{ AppMain, AppConfiguration }
 
 object Script {  
   object Completions {
-    val cmds = "map" :: "host" :: "ip" :: "ls" :: "help" :: "swap" :: "completion" :: Nil
+    val cmds = "map" :: "unmap" :: "host" :: "ip" :: "ls" :: "help" :: "swap" :: "completion" :: Nil
     type Complete = Completion.Env => Seq[String]
     val NoOp: Complete = { _ => Nil }
     val of: Map[String, Complete] = 
       Map("map" -> { env =>
         env.w match {
-          case 3 if (env.word.isEmpty) => Seq(":host")
-          case 4 if (env.word.isEmpty) => Seq(":ip")
+          case 3 =>
+            if (env.word.isEmpty) Seq(":host")
+            else Hosts.grep().host(env.word)
+          case 4 =>
+            if (env.word.isEmpty) Seq(":ip")
+            else Hosts.grep().ip(env.word)
+          case _ => Seq.empty[String]
+        }
+      },
+      "unmap" -> { env =>
+        env.w match {
+          case 3 =>
+            if (env.word.isEmpty) Seq(":host")
+            else Hosts.grep().host(env.word)
           case _ => Seq.empty[String]
         }
       },
@@ -71,6 +83,8 @@ object Script {
         println(Help)
       case "map" :: host :: ip :: _ =>
         Hosts(Transforms.map(host, ip))()
+      case "unmap" :: host :: _ =>
+        Hosts(Transforms.unmap(host))()
       case "host" :: host :: _ =>
         Hosts(Transforms.host(host, { println(_) }))()
       case "ip" :: ip :: _ =>
