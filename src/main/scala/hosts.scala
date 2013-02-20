@@ -7,10 +7,13 @@ object Hosts {
   def apply(op: Transforms.Op)(file: String = "/etc/hosts") =
     resolve(file).map { f =>
       Parse(Read(f)).fold(println, { chunks =>
-        println("chunks %s" format chunks)
         Write(Stringify((Transforms.ensureDefaultSection andThen op)(chunks)),
               new FileWriter(f))
       })
+    }
+  def ls(file: String = "/etc/hosts") =
+    resolve(file).map { f =>
+      Parse(Read(f)).fold(_ => Seq.empty[Chunk], identity)
     }
   private def resolve(file: String) =
     new File(file) match {
