@@ -17,14 +17,27 @@ install with conscript ( you will need to build and publish the project locally 
      
       Commands:
       
-      map, host, ip, ls, help, completion
-      
+      map, unmap, clear, host, ip, ls, help, swap, completion
+
 ### map 
 
 Maps a hostname to an ip
    
      $ hc map foo.com 127.0.0.1
-   
+
+### unmap
+
+Unmaps a hostname
+
+    $ hc unmap foo.com
+
+
+### clear
+
+Clears all managed host mappings
+
+    $ hc clear
+
 ### host
     
 Shows ip mapped to host
