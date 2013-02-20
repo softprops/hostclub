@@ -20,22 +20,32 @@ install with conscript ( you will need to build and publish the project locally 
       map, host, ip, ls, help, completion
       
 ### map 
+
+Maps a hostname to an ip
    
      $ hc map foo.com 127.0.0.1
    
 ### host
     
+Shows ip mapped to host
+
      $ hc host foo.com
       
 ### ip
 
-     $ hc map 127.0.0.1
+Lists hosts mapped to ip
+
+     $ hc ip 127.0.0.1
       
 ### ls
+
+Lists managed host mappings
 
      $ hc ls
       
 ### help
+
+Shows help info
 
      $ hc help
 
