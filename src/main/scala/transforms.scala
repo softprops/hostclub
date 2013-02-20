@@ -26,6 +26,16 @@ object Transforms {
     case _ => true
   })
 
+  def swap(previp: String, nextip: String, section: String = "default"): Op = _.map {
+    case s@Section(sec, mappings) if (sec == section) =>
+      val maps = Map(mappings.toSeq:_*)
+      val updated = if (maps.contains(previp)) {
+                      maps + (nextip -> maps(previp)) - previp
+                    } else maps
+      s.copy(mappings = updated)
+    case c => c
+  }
+
   /** map a host to given ip */
   def map(host: String, ip: String, section: String = "default"): Op = _.map {
     case s@Section(sec, mappings) if (sec == section) =>
