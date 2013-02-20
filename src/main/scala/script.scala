@@ -15,7 +15,7 @@ object Script {
             else Hosts.grep().host(env.word)
           case 4 =>
             if (env.word.isEmpty) Seq(":ip")
-            else Hosts.grep().ip(env.word)
+            else Hosts.grep().ip(env.word) ++ Aliases.grep(env.word)
           case _ => Seq.empty[String]
         }
       },
@@ -48,7 +48,7 @@ object Script {
         env.w match {
           case 3 =>
             if (env.word.isEmpty) Seq(":ip")
-            else Hosts.grep().ip(env.word)
+            else Hosts.grep().ip(env.word) ++ Aliases.grep(env.word)
           case _ => Seq.empty[String]
         }
       },
@@ -58,8 +58,10 @@ object Script {
         env.w match {
           case 3 =>
             if (env.word.isEmpty) Seq(":previous_ip")
-            else Hosts.grep().ip(env.word)
-          case 4 if (env.word.isEmpty) => Seq(":target_ip")
+            else Hosts.grep().ip(env.word) ++ Aliases.grep(env.word)
+          case 4 =>
+            if (env.word.isEmpty) Seq(":target_ip")
+            else Hosts.grep().ip(env.word) ++ Aliases.grep(env.word)
           case _ => Seq.empty[String]
         }
       },
@@ -86,15 +88,17 @@ object Script {
     "\033[1;30m", Console.RESET
   )
 
+  def aliasOr(ip: String) = Aliases(ip).getOrElse(ip)
+
   def apply(args: Array[String]) = {
     args.toList match {
       case Nil =>
         println(Help)
       case "map" :: host :: ip :: _ =>
-        Hosts(Transforms.map(host, ip))()
+        Hosts(Transforms.map(host, aliasOr(ip)))()
       case "alias" :: name :: rest =>
         if (rest.isEmpty) println(Aliases(name).getOrElse("alias not found"))
-        else Aliases(name, rest(0))
+        else Aliases.alias(name, rest(0))
       case "aliases" :: _ =>
         Aliases.ls.foreach {
           case (alias, ip) =>
@@ -107,9 +111,9 @@ object Script {
       case "host" :: host :: _ =>
         Hosts(Transforms.host(host, { println(_) }))()
       case "ip" :: ip :: _ =>
-        Hosts(Transforms.ip(ip, { _.foreach(println) }))()
+        Hosts(Transforms.ip(aliasOr(ip), { _.foreach(println) }))()
       case "swap" :: a :: b :: _ =>
-        Hosts(Transforms.swap(a, b))()
+        Hosts(Transforms.swap(aliasOr(a), aliasOr(b)))()
       case "ls" :: rest =>        
         Hosts.ls().map(_.foreach {
           case Section(name, mappings)

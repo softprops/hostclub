@@ -31,7 +31,6 @@ Unmaps a hostname
 
     $ hc unmap foo.com
 
-
 ### clear
 
 Clears all managed host mappings

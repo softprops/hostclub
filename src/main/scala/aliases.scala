@@ -15,13 +15,19 @@ object Aliases {
                     }):_*)
   }
 
-  def apply(alias: String, ip: String) = {
+  private def serialize(current: Map[String, String]) = {
     ensureExists
-    val w = new FileWriter(file, true)
-    w.write("%s %s".format(alias, ip))
+    val w = new FileWriter(file)
+    current.foreach {
+      case (ali, ip) =>
+        w.write("%s %s\n".format(ali, ip))
+    }
     w.flush
     w.close
   }
+
+  def alias(alias: String, ip: String) =
+    serialize(aliases + (alias -> ip))
 
   def apply(name: String) = aliases.get(name)
 
