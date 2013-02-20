@@ -52,7 +52,7 @@ object Script {
       case "host" :: host :: _ =>
         Hosts(Transforms.host(host, { println(_) }))()
       case "ip" :: ip :: _ =>
-        Hosts(Transforms.ip(ip, { println(_.mkString("\n")) }))()
+        Hosts(Transforms.ip(ip, { _.foreach(println) }))()
       case "ls" :: rest =>        
         Hosts.ls().map(_.foreach {
           case Section(name, mappings)
