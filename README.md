@@ -36,6 +36,12 @@ Shows ip mapped to host
 Lists hosts mapped to ip
 
      $ hc ip 127.0.0.1
+
+### swap
+
+Swaps two ips.
+
+    $ hc swap 127.0.0.1 192.168.0.10
       
 ### ls
 
