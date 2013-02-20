@@ -4,7 +4,7 @@ import xsbti.{ AppMain, AppConfiguration }
 
 object Script {  
   object Completions {
-    val cmds = "map" :: "unmap" :: "host" :: "ip" :: "ls" :: "help" :: "swap" :: "completion" :: Nil
+    val cmds = "map" :: "unmap" :: "clear" :: "host" :: "ip" :: "ls" :: "help" :: "swap" :: "completion" :: Nil
     type Complete = Completion.Env => Seq[String]
     val NoOp: Complete = { _ => Nil }
     val of: Map[String, Complete] = 
@@ -27,6 +27,7 @@ object Script {
           case _ => Seq.empty[String]
         }
       },
+      "clear"      -> NoOp,
       "host"       -> { env =>
         env.w match {
           case 3 =>
@@ -85,6 +86,8 @@ object Script {
         Hosts(Transforms.map(host, ip))()
       case "unmap" :: host :: _ =>
         Hosts(Transforms.unmap(host))()
+      case "clear" :: _ =>
+        Hosts(Transforms.clear)()
       case "host" :: host :: _ =>
         Hosts(Transforms.host(host, { println(_) }))()
       case "ip" :: ip :: _ =>
