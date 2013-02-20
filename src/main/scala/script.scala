@@ -4,7 +4,7 @@ import xsbti.{ AppMain, AppConfiguration }
 
 object Script {  
   object Completions {
-    val cmds = "map" :: "unmap" :: "clear" :: "host" :: "ip" :: "ls" :: "help" :: "swap" :: "completion" :: Nil
+    val cmds = "map" :: "unmap" :: "clear" :: "aliases" :: "alias" :: "host" :: "ip" :: "ls" :: "help" :: "swap" :: "completion" :: Nil
     type Complete = Completion.Env => Seq[String]
     val NoOp: Complete = { _ => Nil }
     val of: Map[String, Complete] = 
@@ -28,6 +28,14 @@ object Script {
         }
       },
       "clear"      -> NoOp,
+      "aliases"    -> NoOp,
+      "alias"      -> { env =>
+        env.w match {
+          case e =>
+            if (env.word.isEmpty) Seq(":name")
+            else Aliases.grep(env.word)
+        }
+      },
       "host"       -> { env =>
         env.w match {
           case 3 =>
@@ -84,6 +92,14 @@ object Script {
         println(Help)
       case "map" :: host :: ip :: _ =>
         Hosts(Transforms.map(host, ip))()
+      case "alias" :: name :: rest =>
+        if (rest.isEmpty) println(Aliases(name).getOrElse("alias not found"))
+        else Aliases(name, rest(0))
+      case "aliases" :: _ =>
+        Aliases.ls.foreach {
+          case (alias, ip) =>
+            println("%s-%s %s%s%s %s".format("\033[1;30m", Console.RESET, Console.CYAN, alias, Console.RESET, ip))
+        }
       case "unmap" :: host :: _ =>
         Hosts(Transforms.unmap(host))()
       case "clear" :: _ =>
@@ -101,7 +117,9 @@ object Script {
             println("\033[1;30m" + "# %s".format(name) + Console.RESET)
             mappings.foreach {
               case (ip, hosts) =>
-                println("- %s%s%s %s" format(Console.CYAN, ip, Console.RESET, hosts.mkString(", ")))
+                println("%s-%s %s%13s%s %s" format("\033[1;30m", Console.RESET,
+                                                   Console.CYAN, ip, Console.RESET,
+                                                   hosts.mkString(", ")))
             }
           case _ => ()
         })
