@@ -16,8 +16,8 @@ install with conscript ( you will need to build and publish the project locally 
      $ hc <command> <options>
      
       Commands:
-      
-      map, unmap, clear, host, ip, ls, help, swap, completion
+
+      map, unmap, clear, aliases, alias, host, ip, ls, help, swap, completion 
 
 ### map 
 
@@ -37,6 +37,19 @@ Unmaps a hostname
 Clears all managed host mappings
 
     $ hc clear
+
+### aliases
+
+Lists all current aliases
+
+    $ hc aliases
+
+### alias
+
+Stores an alias for a given ip
+
+    $ hc alias name ip
+    $ hc alias name
 
 ### host
     
