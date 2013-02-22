@@ -132,7 +132,7 @@ object Script {
       case "completion" :: rest =>
         rest match {
           case Nil =>
-            println(Completion.Script)
+            println(Completion.script("hc"))
           case _ =>
             val compl = Completion(args)
             compl.env.w match {
