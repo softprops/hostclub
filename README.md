@@ -1,6 +1,6 @@
 # hostclub
 
-a party club for your host mappings (under constuction)
+a party club for your host mappings
 
 ## install
 
