@@ -22,6 +22,8 @@ libraryDependencies <+= (sbtVersion)(
    "launcher-interface" %
     _ % "provided")
 
+publishTo := Some(Opts.resolver.sonatypeStaging)
+
 publishArtifact in Test := false
 
 publishMavenStyle := true
