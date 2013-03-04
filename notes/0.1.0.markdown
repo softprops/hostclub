@@ -24,8 +24,8 @@ Switching between environments? You can bulk map hosts with `swap`
     
 Tired of remembering all those ips? Me too. Enter `alias`
 
-    hc alias qa ipa
-    hc alias test ipb
+    hc alias qa qaip
+    hc alias test testip
     
 You can list aliases just as easily.
 
