@@ -12,11 +12,14 @@ object Parse extends RegexParsers {
 
   def name: Parser[String] = """[0-9A-Za-z-_.]+""".r
 
-  def ip: Parser[String] =
-    ("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}" +
+  val Ip = ("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}" +
      "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)").r
 
-  def host = """(?:(?:(?:(?:[a-zA-Z0-9][-a-zA-Z0-9]{0,61})?[a-zA-Z0-9])[.])*(?:[a-zA-Z][-a-zA-Z0-9]{0,61}[a-zA-Z0-9]|[a-zA-Z])[.]?)""".r
+  val Host = """(?:(?:(?:(?:[a-zA-Z0-9][-a-zA-Z0-9]{0,61})?[a-zA-Z0-9])[.])*(?:[a-zA-Z][-a-zA-Z0-9]{0,61}[a-zA-Z0-9]|[a-zA-Z])[.]?)""".r
+
+  def ip: Parser[String] = Ip
+
+  def host: Parser[String] = Host
 
   private def hosts: Parser[Seq[Chunk]] =
     (section | anythingBut(section)).*

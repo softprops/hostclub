@@ -90,30 +90,69 @@ object Script {
 
   def aliasOr(ip: String) = Aliases(ip).getOrElse(ip)
 
+  val Ok   = 0
+  val Fail = 1
+
+  def fail(msg: String) = {
+    System.err.println(msg)
+    Fail
+  }
+
   def apply(args: Array[String]) = {
     args.toList match {
       case Nil =>
         println(Help)
+        Ok
       case "map" :: host :: ip :: _ =>
-        Hosts(Transforms.map(host, aliasOr(ip)))()
+        (host, aliasOr(ip)) match {
+          case (h @ Parse.Host(), ip @ Parse.Ip()) =>
+            Hosts(Transforms.map(h, ip))()
+            Ok
+          case (h, ip) =>
+            fail("invalid host %s or ip %s" format(h, ip))
+        }
       case "alias" :: name :: rest =>
-        if (rest.isEmpty) println(Aliases(name).getOrElse("alias not found"))
-        else Aliases.alias(name, rest(0))
+        if (rest.isEmpty) {          
+          Aliases(name).getOrElse("alias not found")
+          Ok
+        } else rest(0) match {
+          case ip @ Parse.Ip() =>
+            Aliases.alias(name, ip)
+            Ok
+          case invalid =>
+            fail("invalid ip %s" format invalid)
+        }
       case "aliases" :: _ =>
         Aliases.ls.foreach {
           case (alias, ip) =>
             println("%s-%s %s%s%s %s".format("\033[1;30m", Console.RESET, Console.CYAN, alias, Console.RESET, ip))
         }
+        Ok
       case "unmap" :: host :: _ =>
         Hosts(Transforms.unmap(host))()
+        Ok
       case "clear" :: _ =>
         Hosts(Transforms.clear)()
+        Ok
       case "host" :: host :: _ =>
         Hosts(Transforms.host(host, { println(_) }))()
+        Ok
       case "ip" :: ip :: _ =>
-        Hosts(Transforms.ip(aliasOr(ip), { _.foreach(println) }))()
+        aliasOr(ip) match {
+          case ip @ Parse.Ip() =>
+            Hosts(Transforms.ip(aliasOr(ip), { _.foreach(println) }))()
+            Ok
+          case invalid =>
+            fail("invalid ip %s" format invalid)
+        }
       case "swap" :: a :: b :: _ =>
-        Hosts(Transforms.swap(aliasOr(a), aliasOr(b)))()
+        (aliasOr(a), aliasOr(b)) match {
+          case (ipa @ Parse.Ip(), ipb @ Parse.Ip()) =>
+            Hosts(Transforms.swap(ipa, ipb))()
+            Ok
+          case (ia, ib) =>
+            fail("one or both of %s or %s are invalid ips" format(ia, ib))
+        }
       case "ls" :: rest =>        
         Hosts.ls().map(_.foreach {
           case Section(name, mappings)
@@ -127,8 +166,10 @@ object Script {
             }
           case _ => ()
         })
+        Ok
       case "help" :: _ =>
         println(Help)
+        Ok
       case "completion" :: rest =>
         rest match {
           case Nil =>
@@ -142,9 +183,11 @@ object Script {
                 compl.log(options: _*)
             }
         }
-      case _ => ()
+        Ok
+      case _ =>
+        println(Help)
+        Ok
     }
-    1
   }
 }
 
