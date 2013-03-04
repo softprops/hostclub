@@ -31,9 +31,13 @@ object Script {
       "aliases"    -> NoOp,
       "alias"      -> { env =>
         env.w match {
-          case e =>
+          case 3 =>
             if (env.word.isEmpty) Seq(":name")
             else Aliases.grep(env.word)
+          case 4 =>
+            if (env.word.isEmpty) Seq(":ip")
+            else Aliases.grep(env.word)
+          case _ => Seq.empty[String]
         }
       },
       "host"       -> { env =>
