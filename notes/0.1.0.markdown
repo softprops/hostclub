@@ -1,0 +1,43 @@
+## Initial release
+
+Tired of editing and greping your host file by hand? Me too. Enter hostclub: a tool for managing and inspecting hosts with minimal effort.
+
+## Install
+
+Using [conscript](https://github.com/n8han/conscript#readme), enter the following in your nearest terminal prompt.
+
+    cs softprops/hostclub
+    
+## Usage
+
+The easist way to get started is to start mapping hosts with `map`
+
+    hc map host ip
+
+List your current managed mappings with  `ls`
+
+    hc ls
+
+Switching between environments? You can bulk map hosts with `swap`
+
+    hc swap previd newip
+    
+Tired of remembering all those ips? Me too. Enter `alias`
+
+    hc alias qa ipa
+    hc alias test ipb
+    
+You can list aliases just as easily.
+
+    hc aliases
+    
+Now you can issue any command that expects an ip with an alias
+
+    hc swap qa test
+    
+Finally, save your fingers some typing with (experimental) bash completion
+
+    hc completion >> ~/.bashrc
+    
+For more information, checkout the [readme](https://github.com/softprops/hostclub#readme)
+
