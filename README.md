@@ -6,8 +6,7 @@ a party club for your host mappings
 
 _make a backup of /etc/hosts_.
 
-install with conscript ( you will need to build and publish the project locally )
-
+install with [conscript](https://github.com/n8han/conscript#linux-mac)
     $ cs softprops/hostclub
 
 ## usage
